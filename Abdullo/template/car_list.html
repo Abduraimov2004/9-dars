@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mashinalar ro'yxati</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f4f4f9;
+            font-family: 'Arial', sans-serif;
+        }
+        .navbar {
+            margin-bottom: 20px;
+        }
+        .car-card {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin-bottom: 20px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        .car-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 1px solid #ddd;
+        }
+        .car-card .card-body {
+            padding: 20px;
+            flex-grow: 1;
+        }
+        .car-title {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .car-details {
+            font-size: 1rem;
+            color: #555;
+            margin-bottom: 10px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .car-ram {
+            margin-bottom: 10px;
+            color: #333;
+            font-weight: bold;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .car-footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #e9ecef;
+            font-size: 0.9rem;
+            color: #777;
+        }
+        .filter-section {
+            margin-bottom: 20px;
+        }
+        .filter-section select {
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Mashinalar Saloni</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Barcha mashinalar</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Brendlar</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Ranglar</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Filter Section -->
+        <div class="filter-section">
+            <form method="get" action="">
+                <select class="form-control" name="brand" style="display: inline-block; width: auto;">
+                    <option value="">Brend bo'yicha</option>
+                    {% for brand in brands %}
+                    <option value="{{ brand.id }}" {% if brand.id|stringformat:"s" == selected_brand|stringformat:"s" %}selected{% endif %}>{{ brand.name }}</option>
+                    {% endfor %}
+                </select>
+
+                <select class="form-control" name="color" style="display: inline-block; width: auto;">
+                    <option value="">Rang bo'yicha</option>
+                    {% for color in colors %}
+                    <option value="{{ color.id }}" {% if color.id|stringformat:"s" == selected_color|stringformat:"s" %}selected{% endif %}>{{ color.name }}</option>
+                    {% endfor %}
+                </select>
+
+                <button type="submit" class="btn btn-primary">Filtrlash</button>
+                <a href="{% url 'car_list' %}" class="btn btn-secondary">Tozalash</a>
+            </form>
+        </div>
+
+        <div class="row">
+            {% for car in cars %}
+            <div class="col-md-4">
+                <div class="car-card">
+                    <img src="{{ car.image.url }}" alt="{{ car.model_name }}">
+                    <div class="card-body">
+                        <h2 class="car-title">{{ car.brand.name }} {{ car.model_name }}</h2>
+                        <p class="car-details"><strong>Rang:</strong> {{ car.color.name }}</p>
+                        <p class="car-details"><strong>Qiymati:</strong> ${{ car.price }}</p>
+                        <p class="car-details"><strong>Ishlab chiqarilgan:</strong> {{ car.production_date }}</p>
+                        <p class="car-details"><strong>Sig'im:</strong> {{ car.capacity }} kishi</p>
+                        <p class="car-ram">{{ car.ram|truncatewords:6 }}</p>  <!-- Limit to 6 words -->
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="car-footer">
+        &copy; 2024 Mashinalar Saloni. Barcha huquqlar himoyalangan.
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
